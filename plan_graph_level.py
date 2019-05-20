@@ -63,15 +63,6 @@ class PlanGraphLevel(object):
         for act in all_actions:
             if previous_proposition_layer.all_preconds_in_layer(act):
                 preconds = act.get_pre()
-                # add_action = True
-                # for prop1, prop2 in itertools.combinations(preconds, 2):
-                #     if previous_proposition_layer.is_mutex(prop1, prop2):
-                #         add_action = False
-                #         print(act.name(), add_action)
-                # if add_action:
-                #     print(act.name(), add_action)
-                #     self.actionLayer.addAction(act)
-                # print('preconds: ', preconds)
 
                 # print('--------- actioooooon: ', act)  # TODO: remove
                 if len(preconds)==1:
@@ -79,7 +70,7 @@ class PlanGraphLevel(object):
                     self.action_layer.add_action(act)
                 else:
                     # for p, q in itertools.combinations(preconds, 2):  # TODO:remove
-                        # print(p, q, 'are mutex: ', previous_proposition_layer.is_mutex(p, q))
+                    #     print(p, q, 'are mutex: ', previous_proposition_layer.is_mutex(p, q))
                     if any([previous_proposition_layer.is_mutex(p1, p1) for p1, p2 in itertools.combinations(preconds,2)]):
                         # print('we have a mutex prop-pair, so we dont add action ', act)  # TODO:delete
                         break

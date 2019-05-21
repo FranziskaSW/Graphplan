@@ -59,7 +59,6 @@ class PlanGraphLevel(object):
         self.actionLayer.addAction(action) adds action to the current action layer
         """
         all_actions = PlanGraphLevel.actions
-        "*** YOUR CODE HERE ***"
         for act in all_actions:
             if previous_proposition_layer.all_preconds_in_layer(act):
                 preconds = act.get_pre()
@@ -186,7 +185,6 @@ def have_competing_needs(a1, a2, mutex_props):
     Hint: for propositions p  and q, the command  "Pair(p, q) in mutex_props"
           returns true if p and q are mutex in the previous level
     """
-    "*** YOUR CODE HERE ***"
     for p in a1.get_pre():
         for q in a2.get_pre():
             if Pair(p, q) in mutex_props:
@@ -202,7 +200,6 @@ def mutex_propositions(prop1, prop2, mutex_actions_list):
     You might want to use this function:
     prop1.get_producers() returns the set of all the possible actions in the layer that have prop1 on their add list
     """
-    "*** YOUR CODE HERE ***"
     print('mutex_action_list: ', mutex_actions_list)
     for p in prop1.get_producers():
         for q in prop2.get_producers():

@@ -242,7 +242,6 @@ def independent_pair(a1, a2):
     return True
 
 
-
 if __name__ == '__main__':
     import sys
     import time

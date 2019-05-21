@@ -59,15 +59,13 @@ class PlanGraphLevel(object):
         if all the preconditions of action are in the previous propositions layer
         self.actionLayer.addAction(action) adds action to the current action layer
         """
-        all_actions = PlanGraphLevel.actions
+        # all_actions = PlanGraphLevel.actions
+        all_actions = PlanGraphLevel.independent_actions
         for act in all_actions:
             if previous_proposition_layer.all_preconds_in_layer(act):
                 preconds = act.get_pre()
-                if not any([previous_proposition_layer.is_mutex(p1, p1) for p1, p2 in itertools.combinations(preconds,2)]):
-                    print('add action ', act)
+                if not any([previous_proposition_layer.is_mutex(p1, p1) for p1, p2 in itertools.combinations(preconds, 2)]):
                     self.action_layer.add_action(act)
-
-
 
     def update_mutex_actions(self, previous_layer_mutex_proposition):
         """

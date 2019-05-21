@@ -51,6 +51,7 @@ class PlanGraphLevel(object):
         You should add an action to the layer if its preconditions are in the previous propositions layer,
         and the preconditions are not pairwise mutex.
         all_actions is the set of all the action (include noOp) in the domain
+
         You might want to use those functions:
         previous_proposition_layer.is_mutex(prop1, prop2) returns true
         if prop1 and prop2 are mutex at the previous propositions layer
@@ -63,20 +64,9 @@ class PlanGraphLevel(object):
         for act in all_actions:
             if previous_proposition_layer.all_preconds_in_layer(act):
                 preconds = act.get_pre()
-
-                # print('--------- actioooooon: ', act)  # TODO: remove
-                if len(preconds)==1:
-                    # print('only one precond, so we add action ', act)
+                if not any([previous_proposition_layer.is_mutex(p1, p1) for p1, p2 in itertools.combinations(preconds,2)]):
+                    print('add action ', act)
                     self.action_layer.add_action(act)
-                else:
-                    # for p, q in itertools.combinations(preconds, 2):  # TODO:remove
-                    #     print(p, q, 'are mutex: ', previous_proposition_layer.is_mutex(p, q))
-                    if any([previous_proposition_layer.is_mutex(p1, p1) for p1, p2 in itertools.combinations(preconds,2)]):
-                        # print('we have a mutex prop-pair, so we dont add action ', act)  # TODO:delete
-                        break
-                    else:
-                        # print('add action', act)  # TODO:delete
-                        self.action_layer.add_action(act)
 
 
 
@@ -95,7 +85,6 @@ class PlanGraphLevel(object):
 
         # print(len(current_layer_actions))
         for act1, act2 in itertools.combinations(current_layer_actions, 2):
-            mutex_actions(act1, act2, previous_layer_mutex_proposition)
             if mutex_actions(act1, act2, previous_layer_mutex_proposition):
                 self.action_layer.add_mutex_actions(act1, act2)
                 # print(len(self.action_layer.mutexActions))

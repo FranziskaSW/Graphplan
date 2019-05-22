@@ -41,13 +41,13 @@ class PlanningProblem:
         self.expanded = 0
 
     def get_start_state(self):
-        "*** YOUR CODE HERE ***"
+        return self.initialState
 
     def is_goal_state(self, state):
         """
         Hint: you might want to take a look at goal_state_not_in_prop_payer function
         """
-        "*** YOUR CODE HERE ***"
+        return not self.goal_state_not_in_prop_layer(state)
 
     def get_successors(self, state):
         """
@@ -62,8 +62,15 @@ class PlanningProblem:
 
         Note that a state *must* be hashable!! Therefore, you might want to represent a state as a frozenset
         """
+        successors = []
         self.expanded += 1
-        "*** YOUR CODE HERE ***"
+        for act in PlanGraphLevel.actions:
+            if act.all_preconds_in_list(state):
+                successor = state.copy()
+                # TODO apply action
+                successors.append((successor, act, self.expanded))
+        return successors
+
 
     @staticmethod
     def get_cost_of_actions( actions):
@@ -105,7 +112,11 @@ def max_level(state, planning_problem):
     pg_init = PlanGraphLevel()                   #create a new plan graph level (level is the action layer and the propositions layer)
     pg_init.set_proposition_layer(prop_layer_init)   #update the new plan graph level with the the proposition layer
     """
-    "*** YOUR CODE HERE ***"
+    prop_layer_init = PropositionLayer()  # create a new proposition layer
+    for prop in state:
+        prop_layer_init.add_proposition(prop)  # update the proposition layer with the propositions of the state
+    pg_init = PlanGraphLevel()  # create a new plan graph level (level is the action layer and the propositions layer)
+    pg_init.set_proposition_layer(prop_layer_init)  # update the new plan graph level with the the proposition layer
 
 
 def level_sum(state, planning_problem):
@@ -114,6 +125,7 @@ def level_sum(state, planning_problem):
     If the goal is not reachable from the state your heuristic should return float('inf')
     """
     "*** YOUR CODE HERE ***"
+    pass
 
 
 def is_fixed(graph, level):

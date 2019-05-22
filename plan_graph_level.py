@@ -59,7 +59,6 @@ class PlanGraphLevel(object):
         if all the preconditions of action are in the previous propositions layer
         self.actionLayer.addAction(action) adds action to the current action layer
         """
-        # all_actions = PlanGraphLevel.independent_actions ???
         all_actions = PlanGraphLevel.actions
         for act in all_actions:
             if previous_proposition_layer.all_preconds_in_layer(act):
@@ -96,11 +95,12 @@ class PlanGraphLevel(object):
         self.proposition_layer.add_proposition(prop) adds the proposition prop to the current layer
 
         """
+        current_layer_actions = self.action_layer.get_actions()
         props = {}
-        for act in self.action_layer.get_actions():
-            for p in act.get_add():
+        for act in current_layer_actions:
+            for p in (set(act.get_pre()) - set(act.get_delete())) | set(act.get_add()):
                 if p not in props.keys():
-                    props[p] = Proposition(p)
+                    props[p] = Proposition(p.get_name())
                 props[p].add_producer(act)
 
         for prop in props.values():
@@ -117,7 +117,7 @@ class PlanGraphLevel(object):
         """
         current_layer_mutex_actions = self.action_layer.get_mutex_actions()
         for p1, p2 in itertools.combinations(self.proposition_layer.get_propositions(), 2):
-            if p1 is not p2 and mutex_propositions(p1, p2, current_layer_mutex_actions):
+            if p1 != p2 and mutex_propositions(p1, p2, current_layer_mutex_actions):
                 self.proposition_layer.add_mutex_prop(p1, p2)
 
     def expand(self, previous_layer):
@@ -141,9 +141,6 @@ class PlanGraphLevel(object):
         # with actions of current layer: set propositions and their mutex relations in proposition layer
         self.update_proposition_layer()
         self.update_mutex_proposition()
-
-        # print(previous_proposition_layer)
-        # print(previous_layer_mutex_proposition)
 
     def expand_without_mutex(self, previous_layer):
         """
@@ -188,5 +185,5 @@ def mutex_propositions(prop1, prop2, mutex_actions_list):
     You might want to use this function:
     prop1.get_producers() returns the set of all the possible actions in the layer that have prop1 on their add list
     """
-    return all([Pair(p, q) in mutex_actions_list
-                for p, q in itertools.product(prop1.get_producers(), prop2.get_producers())])
+    return all([Pair(a1, a2) in mutex_actions_list
+                for a1, a2 in itertools.product(prop1.get_producers(), prop2.get_producers())])

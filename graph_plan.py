@@ -228,7 +228,6 @@ def independent_pair(a1, a2):
     a1.is_pos_effect(p) returns true is p is in a1.get_add()
     a1.is_neg_effect(p) returns true is p is in a1.get_delete()
     """
-
     # inconsistent effects:
     inconsist_eff_12 = any([a2.is_neg_effect(p) for p in a1.get_add()])  # a1 adds something that is deleted by a2
     inconsist_eff_21 = any([a1.is_neg_effect(p) for p in a2.get_add()])

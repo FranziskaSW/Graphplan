@@ -66,9 +66,14 @@ class PlanningProblem:
         self.expanded += 1
         for act in PlanGraphLevel.actions:
             if act.all_preconds_in_list(state):
-                successor = state.copy()
-                # TODO apply action
-                successors.append((successor, act, self.expanded))
+                successor = list(state).copy()
+                for p in act.get_delete():
+                    if p in successor:
+                        successor.remove(p)
+                for p in act.get_add():
+                    if p not in successor:
+                        successor.append(p)
+                successors.append((frozenset(successor), act, self.expanded))
         return successors
 
 

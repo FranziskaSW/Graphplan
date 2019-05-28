@@ -51,11 +51,11 @@ def create_problem_file(problem_file_name_, n_, m_):
             if d_id < b_id:
                 init_state += 'smaller({0},{1}) '.format(d_str, b_str)
 
-    for i in range(len(disks)-1, 0, -1):
-        init_state += 'on({},{}) '.format(disks[i], disks[i-1])
-        goal_state += 'on({},{}) '.format(disks[i], disks[i-1])
+    for i in range(len(disks)-1):
+        init_state += 'on({},{}) '.format(disks[i], disks[i+1])
+        goal_state += 'on({},{}) '.format(disks[i], disks[i+1])
 
-    init_state += 'clear(d_0) on(d_{}, p_{}) '.format(n_ - 1, 0)
+    init_state += 'on(d_{}, p_{}) clear(d_0) '.format(n_ - 1, 0)
     goal_state += 'on(d_{}, p_{}) '.format(n_ - 1, m_ - 1)
 
     for i in range(1, len(pegs)):

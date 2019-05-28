@@ -55,8 +55,8 @@ def create_problem_file(problem_file_name_, n_, m_):
         init_state += 'on({},{}) '.format(disks[i], disks[i+1])
         goal_state += 'on({},{}) '.format(disks[i], disks[i+1])
 
-    init_state += 'on(d_{}, p_{}) clear(d_0) '.format(n_ - 1, 0)
-    goal_state += 'on(d_{}, p_{}) '.format(n_ - 1, m_ - 1)
+    init_state += 'on(d_{},p_{}) clear(d_0) '.format(n_ - 1, 0)
+    goal_state += 'on(d_{},p_{}) '.format(n_ - 1, m_ - 1)
 
     for i in range(1, len(pegs)):
         init_state += 'clear({}) '.format(pegs[i])

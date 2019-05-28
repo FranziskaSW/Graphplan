@@ -14,42 +14,41 @@ def action(x, y, z, disks_dict, disks_star_dict):
             'add' : add,
             'delete' : delete}
 
+
 def create_domain_file(domain_file_name, n_, m_):
     disks = ['d_%s' % i for i in list(range(n_))]  # [d_0,..., d_(n_ - 1)]
     pegs = ['p_%s' % i for i in list(range(m_))]  # [p_0,..., p_(m_ - 1)]
-    domain_file = open(domain_file_name, 'w')  # use domain_file.write(str) to write to domain_file
-    "*** YOUR CODE HERE ***"
+    domain_file = open(domain_file_name, 'w')
 
     # give numeric weight to the disks and pegs, so that it is easier to check conditions
     disks_dict = {weight: name for (weight, name) in enumerate(disks)}
     disks_star_dict = {weight: name for (weight, name) in enumerate(disks + pegs)}
 
     # propositions
+    domain_str = 'Propositions:\n'
+
     ## indicates if disk is empty
-    clear = ['clear(%s)' % disks_star_dict[i] for i in disks_star_dict]
+    for i in disks_star_dict:
+        domain_str += 'clear({}) '.format(disks_star_dict[i])
 
     ## indicates if disk d can be on disk b
-    smaller = []
-    on = []
-    for d in disks_dict:
-        for b in disks_star_dict:
-            if d < b:
-                smaller.append('smaller(%s,%s)' %(disks_dict[d], disks_star_dict[b]))
-                on.append('on(%s,%s)' %(disks_dict[d], disks_star_dict[b]))
-
-    props = clear + smaller + on  # TODO: this has to be written in file
-    print(props)
+    for d_id, d_str in disks_dict.items():
+        for b_id, b_str in disks_star_dict.items():
+            if d_id < b_id:
+                domain_str += 'smaller({0},{1}) on({0},{1}) '.format(d_str, b_str)
 
     # actions
-    actions = []
-    for x in disks_dict:  # all real disks
-        for y in disks_star_dict:  # can lay on other real disk, or on peg (virtual disk)
-            for z in disks_star_dict:  # can be moved to other real disk, or to peg (virtual disk)
-                if x < y and x < z and y!=z:  # disk x needs to be smaller than disks y and z, and y and z different
-                    actions.append(action(x, y, z, disks_dict, disks_star_dict))
+    domain_str += '\nActions:\n'
+    for x_id, x_str in disks_dict.items():  # all real disks
+        for y_id, y_str in disks_star_dict.items():  # can lay on other real disk, or on peg (virtual disk)
+            for z_id, z_str in disks_star_dict.items():  # can be moved to other real disk, or to peg (virtual disk)
+                if x_id < y_id and x_id < z_id and y_id != z_id:  # disk x needs to be smaller than disks y and z, and y and z different
+                    domain_str += 'Name: move-{0}-from-{1}-to-{2}\n' \
+                                  'pre: clear({0}) clear({2}) on({0},{1}) smaller({0},{2})\n' \
+                                  'add: on({0},{2}) clear({1})\n' \
+                                  'delete: clear({2}) on({0},{1})\n'.format(x_str, y_str, z_str)
 
-    print(actions)  # TODO: actions are now a list of dictionaries (see function action) needs to be written in file
-
+    domain_file.write(domain_str)
     domain_file.close()
 
 

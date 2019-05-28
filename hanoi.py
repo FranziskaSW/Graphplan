@@ -40,18 +40,28 @@ def create_problem_file(problem_file_name_, n_, m_):
     disks = ['d_%s' % i for i in list(range(n_))]  # [d_0,..., d_(n_ - 1)]
     pegs = ['p_%s' % i for i in list(range(m_))]  # [p_0,..., p_(m_ - 1)]
     problem_file = open(problem_file_name_, 'w')  # use problem_file.write(str) to write to problem_file
-    "*** YOUR CODE HERE ***"
 
-    print(disks[1:])
-    print(disks[:-1])
+    disks_dict = {weight: name for (weight, name) in enumerate(disks)}
+    disks_star_dict = {weight: name for (weight, name) in enumerate(disks + pegs)}
 
-    on = []
-    # stack the disks
-    for d, b in zip(disks[:-1], disks[1:]):
-        print(d,b)
-    on = ['on(%s,%s)']
-    initial_state = []
+    init_state = 'Initial state: '
+    goal_state = 'Goal state: '
+    for d_id, d_str in disks_dict.items():
+        for b_id, b_str in disks_star_dict.items():
+            if d_id < b_id:
+                init_state += 'smaller({0},{1}) '.format(d_str, b_str)
 
+    for i in range(len(disks)-1, 0, -1):
+        init_state += 'on({},{}) '.format(disks[i], disks[i-1])
+        goal_state += 'on({},{}) '.format(disks[i], disks[i-1])
+
+    init_state += 'clear(d_0) on(d_{}, p_{}) '.format(n_ - 1, 0)
+    goal_state += 'on(d_{}, p_{}) '.format(n_ - 1, m_ - 1)
+
+    for i in range(1, len(pegs)):
+        init_state += 'clear({}) '.format(pegs[i])
+
+    problem_file.write(init_state + '\n' + goal_state)
     problem_file.close()
 
 

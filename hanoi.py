@@ -10,7 +10,6 @@ def create_domain_file(domain_file_name, n_, m_):
     disks_dict = {weight: name for (weight, name) in enumerate(disks)}
     disks_star_dict = {weight: name for (weight, name) in enumerate(disks + pegs)}
 
-    # propositions
     domain_str = 'Propositions:\n'
 
     ## indicates if disk is empty
@@ -23,7 +22,6 @@ def create_domain_file(domain_file_name, n_, m_):
             if d_id < b_id:
                 domain_str += 'smaller({0},{1}) on({0},{1}) '.format(d_str, b_str)
 
-    # actions
     domain_str += '\nActions:\n'
     for x_id, x_str in disks_dict.items():  # all real disks
         for y_id, y_str in disks_star_dict.items():  # can lay on other real disk, or on peg (virtual disk)

@@ -1,20 +1,6 @@
 import sys
 
 
-def action(x, y, z, disks_dict, disks_star_dict):
-    name = 'move-%s-from-%s-to-%s' %(disks_dict[x], disks_star_dict[y], disks_star_dict[z])
-    pre = 'clear(%s) clear(%s) on(%s,%s) smaller(%s,%s)' %(disks_dict[x], disks_star_dict[z],
-                                                           disks_dict[x], disks_star_dict[y],
-                                                           disks_dict[x], disks_star_dict[z])
-    add = 'on(%s,%s) clear(%s)' %(disks_dict[x], disks_star_dict[z], disks_star_dict[y])
-    delete = 'clear(%s) on(%s,%s)' %(disks_star_dict[z], disks_dict[x], disks_star_dict[y])
-
-    return {'Name' : name,
-            'pre' : pre,
-            'add' : add,
-            'delete' : delete}
-
-
 def create_domain_file(domain_file_name, n_, m_):
     disks = ['d_%s' % i for i in list(range(n_))]  # [d_0,..., d_(n_ - 1)]
     pegs = ['p_%s' % i for i in list(range(m_))]  # [p_0,..., p_(m_ - 1)]
@@ -58,41 +44,16 @@ def create_problem_file(problem_file_name_, n_, m_):
     problem_file = open(problem_file_name_, 'w')  # use problem_file.write(str) to write to problem_file
     "*** YOUR CODE HERE ***"
 
-    # give numeric weight to the disks and pegs, so that it is easier to check conditions
-    disks_dict = {weight: name for (weight, name) in enumerate(disks)}
-    disks_star_dict = {weight: name for (weight, name) in enumerate(disks + pegs)}
+    print(disks[1:])
+    print(disks[:-1])
 
-    # initial state
-    ## stack the disks
-    stack = []
+    on = []
+    # stack the disks
     for d, b in zip(disks[:-1], disks[1:]):
-        stack.append('on(%s,%s)' % (d, b))
-    ## and locate at first peg
-    on_i = stack + ['on(%s,%s)' %(disks[-1], pegs[0])]
+        print(d,b)
+    on = ['on(%s,%s)']
+    initial_state = []
 
-    ## what is clear
-    clear_i = ['clear(%s)' %disks[0]] + ['clear(%s)' %i for i in pegs[1:]]
-
-    ## indicates if disk d can be on disk b
-    smaller = []
-    for d in disks_dict:
-        for b in disks_star_dict:
-            if d < b:
-                smaller.append('smaller(%s,%s)' % (disks_dict[d], disks_star_dict[b]))
-
-    initial_state = on_i + clear_i + smaller  # TODO: write this in problem file
-
-    # goal state
-    ## and stack at last peg
-    on_g = stack + ['on(%s,%s)' % (disks[-1], pegs[-1])]
-
-    ## what is clear, smalles disk and all pegs despite last
-    clear_g = ['clear(%s)' % disks[0]] + ['clear(%s)' % i for i in pegs[:-1]]
-
-    goal_state = on_g + clear_g + smaller  # TODO: write this in problem file
-
-    print(initial_state)
-    print(goal_state)
     problem_file.close()
 
 
